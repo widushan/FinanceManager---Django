@@ -1,0 +1,24 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/register_styles.css' %}">
+</head>
+
+{% block content %}
+    <form method="POST">
+        <div class="container">
+            <div class="form-container">
+                <div class="form">
+                    <h2 style = "text-align: center;">Register</h2>
+                    {{ form.username.label_tag }} <br> {{ form.username }} <br>
+                    {{ form.password1.label_tag }} <br> {{ form.password1 }} <br>
+                    {{ form.password2.label_tag }} <br> {{ form.password2 }} 
+                </div>
+                <br>
+                <div class="button-container">
+                    <button class="btn btn-primary" type="submit">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
