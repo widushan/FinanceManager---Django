@@ -10,6 +10,8 @@ from django.views.generic import ListView
 from datetime import datetime
 from .forms import ExpenseForm
 
+import plotly.express as px
+from plotly.graph_objects import *
 
 
 
