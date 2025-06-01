@@ -9,9 +9,11 @@ from django.views.generic.edit import FormView
 from django.views.generic import ListView
 from datetime import datetime
 from .forms import ExpenseForm
-
+from dateutil.relativedelta import relativedelta
+from django.utils.safestring import mark_safe
+from django.db.models import Sum, Count, F
 import plotly.express as px
-from plotly.graph_objects import *
+from plotly.graph_objs import *
 
 
 
@@ -59,6 +61,14 @@ class ExpenseListView(FormView):
         user = self.request.user
         accounts = Account.objects.filter(user=user)
         
+        expense_data_graph = {}
+        expense_data = {}
+
+        for account in accounts:
+            expenses = account.expense_list.all()
+            for expense in expenses:
+                if expense.long_term and expense.monthly_expenses:
+                    
 
 
 
