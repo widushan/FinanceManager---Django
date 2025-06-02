@@ -1,0 +1,157 @@
+/* static/css/expenses.css */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.img {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.img img {
+    max-width: 150px;
+    height: auto;
+}
+
+.main-1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.graph, .expense {
+    flex: 1;
+    min-width: 300px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.bar-chart {
+    height: 400px;
+}
+
+.expenses {
+    margin-top: 20px;
+}
+
+.month {
+    margin-bottom: 40px;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 20px;
+}
+
+.exp_list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.exp_list:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.left {
+    flex: 2;
+}
+
+.left h2 {
+    margin: 0;
+    color: #333;
+}
+
+.date {
+    display: block;
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.right {
+    flex: 1;
+    text-align: right;
+}
+
+.right h2 {
+    margin: 0;
+    color: #4a90e2;
+}
+
+.lower {
+    text-align: center;
+}
+
+.exp_form {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff3cd;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.exp_form h2 {
+    color: #343a40;
+    margin-bottom: 25px;
+}
+
+.exp_form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.exp_form label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.exp_form input[type="text"],
+.exp_form input[type="number"],
+.exp_form input[type="date"],
+.exp_form select {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.exp_form .btn-sucess {
+    background-color: #4a90e2;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.exp_form .btn-sucess:hover {
+    background-color: #357abd;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-1 {
+        flex-direction: column;
+    }
+    
+    .bar-chart {
+        height: 300px;
+    }
+}

@@ -143,9 +143,8 @@ class ExpenseListView(FormView):
         context['aggregated_data'] = aggregated_data
 
         graph_data = {
-            'months': [list['year_month'] for item in aggregated_data],
-            'expenses': [list['expenses'] for item in aggregated_data],
-           
+        'months': [item['year_month'] for item in aggregated_data],
+        'expenses': [item['expenses'] for item in aggregated_data],
         }
 
         graph_data['chart'] = generate_graph(graph_data)

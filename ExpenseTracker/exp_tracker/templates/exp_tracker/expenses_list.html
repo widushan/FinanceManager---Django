@@ -2,7 +2,7 @@
 
 <head>
 
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="{% static 'css/expense_list.css' %}">
     <script src = "https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 </head>
@@ -108,7 +108,7 @@
     </div>
 
     <script>
-        var graphData = {{ graph_data|safe }};
+        var graphData = JSON.parse('{{ graph_data|escapejs }}');
         Plotly.newPlot('plotly_chart', graphData.data, graphData.layout);
     </script>
 
