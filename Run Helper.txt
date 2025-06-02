@@ -1,0 +1,9 @@
+cd ExpenseTracker
+
+py manage.py runserver
+
+create super user for admin  --
+py manage.py createsuperuser
+username - pasindu
+email - pasindu1234@gmail.com
+password - widu@7788

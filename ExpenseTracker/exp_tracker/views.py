@@ -37,10 +37,13 @@ def generate_graph(data):
     fig = px.bar(
         x=data['months'],
         y=data['expenses'],
-        title='Monthly Expenses',
+        title=['Monthly Expenses'],
+        labels={'x': 'Months', 'y': 'Expenses'},
     )
-    return fig.to_html(full_html=False)
+    fig.update_traces(marker_color='008c41')
 
+    graph_json = fig.to_json()
+    return graph_json
 
 
 
@@ -129,7 +132,6 @@ class ExpenseListView(FormView):
                         'name': expense.name,
                         'amount': expense.amount,
                         'date': expense.date,
-                        
                     })
 
 
@@ -148,6 +150,9 @@ class ExpenseListView(FormView):
         context['graph_data'] = mark_safe(graph_data['chart'])
 
         return context
+    
+
+
 
 
     
