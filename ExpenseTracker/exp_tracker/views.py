@@ -14,6 +14,7 @@ from django.utils.safestring import mark_safe
 from django.db.models import Sum, Count, F
 import plotly.express as px
 from plotly.graph_objs import *
+from collections import defaultdict
 
 
 
@@ -53,7 +54,8 @@ def generate_graph(data):
 class ExpenseListView(FormView):
     template_name = 'exp_tracker/expenses_list.html'
     form_class = ExpenseForm
-    success_url = '/'
+    success_url = '/expenses'
+
 
     def form_valid(self, form):
         account, _ = Account.objects.get_or_create(user=self.request.user)

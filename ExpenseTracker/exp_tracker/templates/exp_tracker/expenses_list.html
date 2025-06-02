@@ -49,26 +49,26 @@
                 <h2>Expenses List</h2>
                 <div class="expenses">
                     {% for year_month in expense_data %}
-    <div class="month">
-        <h3>Month: {{ year_month }}</h3>
-        {% for expense in expense_data.year_month %}
-        <div class="exp_list">
-            <div class="left">
-                <h2>{{ expense.name }}</h2>
-                {% if expense.long_term %}
-                <span class="date"> Date - From {{ expense.date }} to {{ expense.end_date }}</span>
-                {% else %}
-                <span class="date"> Date - {{ expense.date }}</span>
-                {% endif %}
-            </div>
-            <div class="right">
-                <h2>Rs. {{ expense.amount }}</h2>
-            </div>
-        </div>
-        <br>
-        {% endfor %}
-    </div>
-{% endfor %}
+                    <div class="month">
+                        <h3>Month: {{ year_month }}</h3>
+                        {% for expense in expense_data.year_month %}
+                        <div class="exp_list">
+                            <div class="left">
+                                <h2>{{ expense.name }}</h2>
+                                {% if expense.long_term %}
+                                <span class="date"> Date - From {{ expense.date }} to {{ expense.end_date }}</span>
+                                {% else %}
+                                <span class="date"> Date - {{ expense.date }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="right">
+                                <h2>Rs. {{ expense.amount }}</h2>
+                            </div>
+                        </div>
+                        <br>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
