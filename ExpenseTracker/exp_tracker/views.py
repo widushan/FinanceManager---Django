@@ -34,13 +34,15 @@ def register(request):
 
 
 def generate_graph(data):
-    fig = px.bar(
-        x=data['months'],
-        y=data['expenses'],
-        title=['Monthly Expenses'],
-        labels={'x': 'Months', 'y': 'Expenses'},
+    fig = px.bar(data, x='months', y='expenses', title='Monthly Expenses')
+    fig.update_layout(
+        xaxis = dict(rangeslider=dict(visible=True)),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font_color='rgba(0,0,0,1)',
+        
     )
-    fig.update_traces(marker_color='008c41')
+    fig.update_traces(marker_color='#008c41')
 
     graph_json = fig.to_json()
     return graph_json
@@ -49,7 +51,7 @@ def generate_graph(data):
 
 
 class ExpenseListView(FormView):
-    template_name = 'home/expenses.html'
+    template_name = 'exp_tracker/expenses_list.html'
     form_class = ExpenseForm
     success_url = '/'
 

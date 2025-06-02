@@ -14,6 +14,12 @@
                 {% else %}
                     <div class="home">
                         <h2>Welcome!</h2>
+                        <div class="reg">
+                            <h2><a href="{% url 'register' %}">Register</a></h2>
+                        </div>
+                        <div class="log">
+                            <h2><a href="{% url 'login' %}">Login</a></h2>
+                        </div>
                     </div>
                 {% endif %}
             </div>
