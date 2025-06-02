@@ -1,0 +1,22 @@
+{% load static %}
+
+<html>
+    <head>
+        <title>Home</title>
+        <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+    </head>
+    <body>
+        {% block content %}
+            <div>
+                {% if user.is_authenticated %}
+                    <h2>Welcome, {{ user.username }}</h2>
+                    <a href="{% url 'expenses' %}">Open Expenses</a>
+                {% else %}
+                    <div class="home">
+                        <h2>Welcome!</h2>
+                    </div>
+                {% endif %}
+            </div>
+        {% endblock %}
+    </body>
+</html>
