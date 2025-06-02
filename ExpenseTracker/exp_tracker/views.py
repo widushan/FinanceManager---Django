@@ -107,7 +107,6 @@ class ExpenseListView(FormView):
                         'name': expense.name,
                         'amount': expense.amount,
                         'date': expense.date,
-                        
                     })
   
         for account in accounts:
@@ -115,14 +114,15 @@ class ExpenseListView(FormView):
             for expense in expenses:
                 if expense.long_term and expense.monthly_expenses:
                     current_date = expense.date
-                    year_month = current_date.strftime('%Y-%m')
-                    if year_month not in expense_data_graph:
-                        expense_data[year_month] = []
+                    while current_date <= expense.end_date:  # <-- Added loop
+                        year_month = current_date.strftime('%Y-%m')
+                        if year_month not in expense_data:
+                            expense_data[year_month] = []
 
                         expense_data[year_month].append({
                             'name': expense.name,
                             'amount': expense.monthly_expenses,
-                            'date': expense.date,
+                            'date': current_date,  # <-- Use current_date instead of expense.date
                             'end_date': expense.end_date,
                             'long_term': expense.long_term,
                         })
