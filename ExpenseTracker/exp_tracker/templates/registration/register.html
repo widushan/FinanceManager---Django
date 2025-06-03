@@ -23,6 +23,7 @@
         <img src="{% static 'images/my_logo.png' %}">
     </div>
     <form method="POST">
+        {% csrf_token %}
         <div class="container">
             <div class="form-container">
                 <div class="form">

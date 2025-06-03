@@ -136,6 +136,65 @@
         text-align: center;
     }
 }
+
+.auth-links {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.auth-btn {
+    padding: 12px 24px;
+    background-color: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.log_out {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.log_out a {
+    padding: 12px 24px;
+    background-color: #f04848;
+    color: white !important;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: transform 0.2s, background-color 0.2s;
+    display: inline-block;
+}
+
+.log_out a:hover {
+    background-color: #f02020;
+    transform: translateY(-2px);
+}
+
+.auth-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.auth-btn:nth-child(2) {
+    background-color: #27ae60;
+}
+
+.auth-btn:nth-child(2):hover {
+    background-color: #219a52;
+}
+
+.auth-btn:nth-child(3) {
+    background-color: #e67e22;
+}
+
+.auth-btn:nth-child(3):hover {
+    background-color: #d35400;
+}
         </style>
 
     </head>
@@ -147,9 +206,15 @@
             <div class="authenticated">
                 {% if user.is_authenticated %}
                     <h2>Welcome, {{ user.username }} 👋</h2>
-                    <a href="{% url 'expenses' %}">Open Expenses</a> <br>
-                    <a href="{% url 'incomes' %}">Open Incomes</a> <br>
-                    <a href="{% url 'report' %}">View Your Status</a>
+                    <div class="auth-links">
+                        <a href="{% url 'expenses' %}" class="auth-btn">Open Expenses</a>
+                        <a href="{% url 'incomes' %}" class="auth-btn">Open Incomes</a>
+                        <a href="{% url 'report' %}" class="auth-btn">View Your Status</a>
+                    </div>
+                    <!--logout button-->
+                    <div class="log_out">
+                        <a href="{% url 'register' %}">Logout ➜</a>
+                    </div>
                 {% else %}
                     <div class="home">
                         <h2>Welcome!</h2>
