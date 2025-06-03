@@ -32,10 +32,11 @@ class Expense(models.Model):
                 return self.amount/((self.end_date - self.date).days/30)
             else:
                 months = (self.end_date.year - datetime.now().year) * 12 + self.end_date.month - datetime.now().month
-                monthly_rate = self.interest / 12 / 100
+                monthly_rate = self.interest_rate / 12 / 100
                 monthly_expense = (self.amount * monthly_rate) / (1 - (1 + monthly_rate) ** (-months))
+                return monthly_expense
         else:
-            return self.monthly_expense
+            return self.amount  # For non-long-term expenses, just return the amount
 
 
 

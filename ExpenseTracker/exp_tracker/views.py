@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -36,16 +36,39 @@ def register(request):
 
 
 def generate_graph(data):
-    fig = px.bar(data, x='months', y='expenses', title='Monthly Expenses')
+    # Import plotly.graph_objects for more control
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    
+    # Add the bar trace
+    fig.add_trace(go.Bar(
+        x=data['months'],
+        y=data['expenses'],
+        marker_color='#008c41'
+    ))
+    
+    # Update layout with better formatting
     fig.update_layout(
-        xaxis = dict(rangeslider=dict(visible=True)),
+        title='Monthly Expenses',
+        xaxis=dict(
+            title='Month',
+            type='category'  # Treat months as categories to preserve order
+        ),
+        yaxis=dict(
+            title='Amount (Rs.)',
+            tickformat=',d'  # Format with commas for thousands
+        ),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         font_color='rgba(0,0,0,1)',
-        
+        height=400
     )
-    fig.update_traces(marker_color='#008c41')
-
+    
+    # Debug: Print out the raw data
+    print("Months:", data['months'])
+    print("Expenses:", data['expenses'])
+    
     graph_json = fig.to_json()
     return graph_json
 
@@ -82,6 +105,7 @@ class ExpenseListView(FormView):
         expense_data_graph = {}
         expense_data = {}
 
+        # Process expenses for both dictionaries simultaneously to ensure consistency
         for account in accounts:
             expenses = account.expense_list.all()
             for expense in expenses:
@@ -89,71 +113,103 @@ class ExpenseListView(FormView):
                     current_date = expense.date
                     while current_date <= expense.end_date:
                         year_month = current_date.strftime('%Y-%m')
-                        if year_month not in expense_data_graph:
-                            expense_data_graph[year_month] = []
-
-                        expense_data_graph[year_month].append({
-                            'name': expense.name,
-                            'amount': expense.monthly_expenses,
-                            'date': expense.date,
-                            'end_date': expense.end_date,
-                        })
-                        current_date += relativedelta(months=1)
-                else:
-                    year_month = expense.date.strftime('%Y-%m')
-                    if year_month not in expense_data_graph:
-                        expense_data_graph[year_month] = []
-                    
-                    expense_data_graph[year_month].append({
-                        'name': expense.name,
-                        'amount': expense.amount,
-                        'date': expense.date,
-                    })
-  
-        for account in accounts:
-            expenses = account.expense_list.all()
-            for expense in expenses:
-                if expense.long_term and expense.monthly_expenses:
-                    current_date = expense.date
-                    while current_date <= expense.end_date:  # <-- Added loop
-                        year_month = current_date.strftime('%Y-%m')
+                        
+                        # For expense_data (display)
                         if year_month not in expense_data:
                             expense_data[year_month] = []
-
                         expense_data[year_month].append({
+                            'id': expense.id,
                             'name': expense.name,
                             'amount': expense.monthly_expenses,
-                            'date': current_date,  # <-- Use current_date instead of expense.date
+                            'date': current_date,
                             'end_date': expense.end_date,
                             'long_term': expense.long_term,
                         })
+                        
+                        # For expense_data_graph (chart)
+                        if year_month not in expense_data_graph:
+                            expense_data_graph[year_month] = 0
+                        expense_data_graph[year_month] += float(expense.monthly_expenses)
+                        
                         current_date += relativedelta(months=1)
                 else:
                     year_month = expense.date.strftime('%Y-%m')
+                    
+                    # For expense_data (display)
                     if year_month not in expense_data:
                         expense_data[year_month] = []
-                    
                     expense_data[year_month].append({
+                        'id': expense.id,
                         'name': expense.name,
                         'amount': expense.amount,
                         'date': expense.date,
+                        'long_term': expense.long_term,
                     })
+                    
+                    # For expense_data_graph (chart)
+                    if year_month not in expense_data_graph:
+                        expense_data_graph[year_month] = 0
+                    expense_data_graph[year_month] += float(expense.amount)
 
-
-        aggregated_data = [{'year_month': key, 'expenses': sum(item['amount'] for item in value)} for key, value in expense_data_graph.items()]
+        # Prepare data for the graph
+        months = []
+        expenses = []
+        
+        for month in sorted(expense_data_graph.keys()):
+            months.append(month)
+            expenses.append(expense_data_graph[month])
+        
+        # Debug output
+        print("Month-wise expense totals:")
+        for month, amount in zip(months, expenses):
+            print(f"{month}: Rs. {amount:,.2f}")
+            
+        # Convert to dicts for template
+        aggregated_data = [{'year_month': month, 'expenses': expense_data_graph[month]} 
+                           for month in sorted(expense_data_graph.keys())]
 
         context['expense_data'] = expense_data
         context['aggregated_data'] = aggregated_data
 
         graph_data = {
-        'months': [item['year_month'] for item in aggregated_data],
-        'expenses': [item['expenses'] for item in aggregated_data],
+            'months': months,
+            'expenses': expenses,
         }
 
         graph_data['chart'] = generate_graph(graph_data)
         context['graph_data'] = mark_safe(graph_data['chart'])
 
         return context
+    
+
+def edit_expense(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = ExpenseForm(request.POST, instance=expense)
+        if form.is_valid():
+            form.save()
+            return redirect('expenses_list')
+    else:
+        form = ExpenseForm(instance=expense)
+        
+    return render(request, 'exp_tracker/edit_expense.html', {
+        'form': form,
+        'expense': expense
+    })
+
+def delete_expense(request, expense_id):
+    expense = get_object_or_404(Expense, id=expense_id, user=request.user)
+    
+    # Find and update the associated account
+    accounts = Account.objects.filter(user=request.user, expense_list=expense)
+    for account in accounts:
+        account.expense_list.remove(expense)
+    
+    # Delete the expense
+    expense.delete()
+    
+    return redirect('expenses_list')
     
 
 
