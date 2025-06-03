@@ -400,12 +400,199 @@ def delete_income(request, income_id):
     income.delete()
     
     return redirect('incomes')
+
+
+
+
+def report(request):
+    user = request.user
+    accounts = Account.objects.filter(user=user)
     
-
-
-
-
+    # Initialize data structures
+    monthly_data = {}
+    current_month = datetime.now().strftime('%Y-%m')
     
+    # Process expenses
+    for account in accounts:
+        expenses = account.expense_list.all()
+        for expense in expenses:
+            if expense.long_term and expense.monthly_expenses:
+                current_date = expense.date
+                while current_date <= expense.end_date:
+                    year_month = current_date.strftime('%Y-%m')
+                    if year_month not in monthly_data:
+                        monthly_data[year_month] = {'expenses': 0, 'incomes': 0}
+                    monthly_data[year_month]['expenses'] += float(expense.monthly_expenses)
+                    current_date += relativedelta(months=1)
+            else:
+                year_month = expense.date.strftime('%Y-%m')
+                if year_month not in monthly_data:
+                    monthly_data[year_month] = {'expenses': 0, 'incomes': 0}
+                monthly_data[year_month]['expenses'] += float(expense.amount)
+
+    # Process incomes
+    for account in accounts:
+        incomes = account.income_list.all()
+        for income in incomes:
+            if income.long_term and income.monthly_incomes:
+                current_date = income.date
+                while current_date <= income.end_date:
+                    year_month = current_date.strftime('%Y-%m')
+                    if year_month not in monthly_data:
+                        monthly_data[year_month] = {'expenses': 0, 'incomes': 0}
+                    monthly_data[year_month]['incomes'] += float(income.monthly_incomes)
+                    current_date += relativedelta(months=1)
+            else:
+                year_month = income.date.strftime('%Y-%m')
+                if year_month not in monthly_data:
+                    monthly_data[year_month] = {'expenses': 0, 'incomes': 0}
+                monthly_data[year_month]['incomes'] += float(income.amount)
+
+    # Calculate profit/loss for each month
+    for month in monthly_data:
+        incomes = monthly_data[month]['incomes']
+        expenses = monthly_data[month]['expenses']
+        profit_loss = incomes - expenses
+        profit_loss_percentage = (profit_loss / incomes * 100) if incomes > 0 else 0
+        
+        monthly_data[month].update({
+            'profit_loss': profit_loss,
+            'profit_loss_percentage': profit_loss_percentage,
+            'status': 'profit' if profit_loss >= 0 else 'loss'
+        })
+
+    # Sort months
+    sorted_months = sorted(monthly_data.keys())
+    
+    # Prepare data for charts
+    months = []
+    incomes = []
+    expenses = []
+    profits = []
+    
+    for month in sorted_months:
+        months.append(month)
+        incomes.append(monthly_data[month]['incomes'])
+        expenses.append(monthly_data[month]['expenses'])
+        profits.append(monthly_data[month]['profit_loss'])
+
+    # Create charts
+    bar_chart = generate_monthly_comparison_chart(months, incomes, expenses, profits)
+    
+    # Current month pie chart
+    if current_month in monthly_data:
+        current_data = monthly_data[current_month]
+        pie_chart = generate_profit_loss_chart({
+            'values': [current_data['incomes'], current_data['expenses']],
+            'labels': ['Income', 'Expenses'],
+            'colors': ['#27ae60', '#e74c3c']
+        })
+    else:
+        pie_chart = generate_profit_loss_chart({
+            'values': [0, 0],
+            'labels': ['Income', 'Expenses'],
+            'colors': ['#27ae60', '#e74c3c']
+        })
+
+    context = {
+        'monthly_data': monthly_data,
+        'current_month': current_month,
+        'sorted_months': sorted_months,
+        'bar_chart': mark_safe(bar_chart),
+        'pie_chart': mark_safe(pie_chart)
+    }
+    
+    return render(request, 'exp_tracker/report.html', context)
+
+def generate_monthly_comparison_chart(months, incomes, expenses, profits):
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    
+    # Add traces for income, expenses, and profit/loss
+    fig.add_trace(go.Bar(
+        name='Income',
+        x=months,
+        y=incomes,
+        marker_color='#27ae60'
+    ))
+    
+    fig.add_trace(go.Bar(
+        name='Expenses',
+        x=months,
+        y=expenses,
+        marker_color='#e74c3c'
+    ))
+    
+    fig.add_trace(go.Scatter(
+        name='Profit/Loss',
+        x=months,
+        y=profits,
+        line=dict(color='#3498db', width=2),
+        mode='lines+markers'
+    ))
+    
+    fig.update_layout(
+        title='Monthly Financial Overview',
+        barmode='group',
+        xaxis=dict(
+            title='Month',
+            type='category'
+        ),
+        yaxis=dict(
+            title='Amount (Rs.)',
+            tickformat=',d'
+        ),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font_color='rgba(0,0,0,1)',
+        height=400,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+    
+    return fig.to_json()
+
+def generate_profit_loss_chart(data):
+    import plotly.graph_objects as go
+    
+    fig = go.Figure()
+    
+    fig.add_trace(go.Pie(
+        labels=data['labels'],
+        values=data['values'],
+        marker_colors=data['colors'],
+        hole=.3
+    ))
+    
+    fig.update_layout(
+        title='Income vs Expenses Distribution',
+        height=400,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font_color='rgba(0,0,0,1)',
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        )
+    )
+    
+    return fig.to_json()
+
+
+
+
+
 
 
         
