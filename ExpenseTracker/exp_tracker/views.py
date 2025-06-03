@@ -189,7 +189,7 @@ def edit_expense(request, expense_id):
         form = ExpenseForm(request.POST, instance=expense)
         if form.is_valid():
             form.save()
-            return redirect('expenses_list')
+            return redirect('expenses')
     else:
         form = ExpenseForm(instance=expense)
         
@@ -209,7 +209,7 @@ def delete_expense(request, expense_id):
     # Delete the expense
     expense.delete()
     
-    return redirect('expenses_list')
+    return redirect('expenses')
     
 
 

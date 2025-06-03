@@ -7,3 +7,7 @@ py manage.py createsuperuser
 username - pasindu
 email - pasindu1234@gmail.com
 password - widu@7788
+
+
+
+
