@@ -4,9 +4,15 @@
     <head>
         <title>Home</title>
         <link rel="stylesheet" href="{% static 'css/home_styles.css' %}">
+
+        
+
     </head>
     <body>
         {% block content %}
+            <div class="img">
+                <img src="{% static 'images/logo.png' %}">
+            </div>
             <div>
                 {% if user.is_authenticated %}
                     <h2>Welcome, {{ user.username }}</h2>

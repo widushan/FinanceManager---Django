@@ -2,6 +2,19 @@
 
 <head>
     <link rel="stylesheet" href="{% static 'css/login_styles.css' %}">
+
+    <style>
+        .img {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .img img {
+            max-width: 150px;
+            height: auto;
+        }
+    </style>
+    
 </head>
 
 {% block content %}
@@ -10,6 +23,9 @@
         <p>Your Username and Password didn't match. Please try again.</p>
     {% endif %}
 
+    <div class="img">
+        <img src="{% static 'images/logo.png' %}">
+    </div>
     <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
             <div class="container">
