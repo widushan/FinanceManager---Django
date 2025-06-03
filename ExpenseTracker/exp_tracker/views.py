@@ -18,6 +18,7 @@ from collections import defaultdict
 
 
 
+
 # Create your views here.
 def home(request):
     return render(request, 'home/home.html')
