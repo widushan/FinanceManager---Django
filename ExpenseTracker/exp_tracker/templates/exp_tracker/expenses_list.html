@@ -56,12 +56,12 @@
         }
         .navbar {
         display: flex;
-        flex-direction: column;
+        flex-direction: row; /* Changed from column */
         align-items: center;
         background-color: #ffffff;
         padding: 15px 20px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        width: 100%;
+        width: 98.5%;
         position: sticky;
         top: 0;
         z-index: 1000;
@@ -69,7 +69,7 @@
 
     /* Logo styling */
     .img {
-        margin-bottom: 15px; /* Reduced spacing */
+         margin-bottom: 0; 
     }
 
     .img img {
@@ -81,16 +81,15 @@
 
     /* Navigation item styling */
     .nav-item {
-        width: 100%;
-        max-width: 200px;
+        margin-left: 20px; 
         text-align: center;
-        margin-bottom: 10px; /* Consistent spacing */
+        margin-bottom: 0;
     }
 
     .nav-item a {
         display: block;
         padding: 12px 20px;
-        background-color: #3498db; /* Blue for Home */
+        background-color: #3498db; 
         color: white !important;
         text-decoration: none;
         border-radius: 5px;
@@ -98,9 +97,7 @@
         transition: all 0.3s ease;
     }
 
-    .incomes a {
-        background-color: #27ae60; /* Green for Incomes */
-    }
+    
 
     .nav-item a:hover {
         background-color: #2980b9; /* Darker blue */
@@ -108,9 +105,7 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .incomes a:hover {
-        background-color: #219150; /* Darker green */
-    }
+    
         
     </style>
 

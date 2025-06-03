@@ -54,6 +54,56 @@
             font-weight: bold;
             color: #004d00;
         }
+        .navbar {
+        display: flex;
+        flex-direction: row; /* Changed from column */
+        align-items: center;
+        background-color: #ffffff;
+        padding: 15px 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        width: 98.5%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* Logo styling */
+    .img {
+         margin-bottom: 0; 
+    }
+
+    .img img {
+        max-width: 120px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* Navigation item styling */
+    .nav-item {
+        margin-left: 20px; 
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    .nav-item a {
+        display: block;
+        padding: 12px 20px;
+        background-color: #3498db; 
+        color: white !important;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    
+
+    .nav-item a:hover {
+        background-color: #2980b9; /* Darker blue */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
     </style>
 
 </head>
@@ -85,8 +135,23 @@
 
     <div class="main">
 
-        <div class="img">
-            <img src="{% static 'images/my_logo.png' %}">
+        <div class="navbar">
+            <!-- Logo as the first item -->
+            <div class="img">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'images/my_logo.png' %}" alt="Logo">
+                </a>
+            </div>
+
+            <!-- Home link as the second item -->
+            <div class="nav-item home">
+                <a href="{% url 'home' %}">Home</a>
+            </div>
+
+            <!-- Expenses link as the third item -->
+            <div class="nav-item incomes">
+                <a href="{% url 'expenses' %}">Expenses</a>
+            </div>
         </div>
 
         <div class="main-1">
