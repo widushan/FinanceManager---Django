@@ -37,7 +37,7 @@ class Expense(models.Model):
                 return monthly_expense
         else:
             return self.amount  # For non-long-term expenses, just return the amount
-
+        
 
 
 
@@ -45,5 +45,33 @@ class Income(models.Model):
     name = models.CharField(max_length=100)
     amount = models.FloatField(default=0)
     date = models.DateField(null=False, default=datetime.now().date())
-    monthly_income = models.FloatField(default=0, null=True, blank=True)
+    long_term = models.BooleanField(default=False)
+    interest_rate = models.FloatField(default=0, null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    monthly_incomes = models.FloatField(default=0, null=True, blank=True)
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+
+    def save(self, *args, **kwargs):
+        if self.long_term:
+            self.monthly_incomes = self.calculate_monthly_incomes()
+        super(Income, self).save(*args, **kwargs)
+
+    def calculate_monthly_incomes(self):
+        if self.long_term:
+            if self.interest_rate == 0:
+                return self.amount/((self.end_date - self.date).days/30)
+            else:
+                months = (self.end_date.year - datetime.now().year) * 12 + self.end_date.month - datetime.now().month
+                monthly_rate = self.interest_rate / 12 / 100
+                monthly_income = (self.amount * monthly_rate) / (1 - (1 + monthly_rate) ** (-months))
+                return monthly_income
+        else:
+            return self.amount  # For non-long-term incomes, just return the amount
+        
+
+    
+
+
+
+
+

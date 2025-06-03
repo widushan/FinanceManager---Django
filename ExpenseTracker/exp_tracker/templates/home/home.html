@@ -11,6 +11,7 @@
                 {% if user.is_authenticated %}
                     <h2>Welcome, {{ user.username }}</h2>
                     <a href="{% url 'expenses' %}">Open Expenses</a>
+                    <a href="{% url 'incomes' %}">Open Incomes</a>
                 {% else %}
                     <div class="home">
                         <h2>Welcome!</h2>
