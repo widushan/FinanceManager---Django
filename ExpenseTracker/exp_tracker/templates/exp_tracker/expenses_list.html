@@ -54,6 +54,64 @@
             font-weight: bold;
             color: #004d00;
         }
+        .navbar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #ffffff;
+        padding: 15px 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    /* Logo styling */
+    .img {
+        margin-bottom: 15px; /* Reduced spacing */
+    }
+
+    .img img {
+        max-width: 120px;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+    }
+
+    /* Navigation item styling */
+    .nav-item {
+        width: 100%;
+        max-width: 200px;
+        text-align: center;
+        margin-bottom: 10px; /* Consistent spacing */
+    }
+
+    .nav-item a {
+        display: block;
+        padding: 12px 20px;
+        background-color: #3498db; /* Blue for Home */
+        color: white !important;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .incomes a {
+        background-color: #27ae60; /* Green for Incomes */
+    }
+
+    .nav-item a:hover {
+        background-color: #2980b9; /* Darker blue */
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .incomes a:hover {
+        background-color: #219150; /* Darker green */
+    }
+        
     </style>
 
 </head>
@@ -85,9 +143,27 @@
 
     <div class="main">
 
-        <div class="img">
-            <img src="{% static 'images/new_logo.png' %}">
+        <div class="navbar">
+            <!-- Logo as the first item -->
+            <div class="img">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'images/my_logo.png' %}" alt="Logo">
+                </a>
+            </div>
+
+            <!-- Home link as the second item -->
+            <div class="nav-item home">
+                <a href="{% url 'home' %}">Home</a>
+            </div>
+
+            <!-- Incomes link as the third item -->
+            <div class="nav-item incomes">
+                <a href="{% url 'incomes' %}">Incomes</a>
+            </div>
         </div>
+
+
+        
 
         <div class="main-1">
             <div class="graph">

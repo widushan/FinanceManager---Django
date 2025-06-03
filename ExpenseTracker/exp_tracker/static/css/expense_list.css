@@ -13,16 +13,6 @@ body {
     padding: 20px;
 }
 
-.img {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.img img {
-    max-width: 150px;
-    height: auto;
-}
-
 .main-1 {
     display: flex;
     flex-wrap: wrap;
