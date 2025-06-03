@@ -48,6 +48,12 @@
         .expenses::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+        .total-amount {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #004d00;
+        }
     </style>
 
 </head>
@@ -101,7 +107,8 @@
                             <div class="left">
                                 <h2>{{ income.name }}</h2>
                                 {% if income.long_term %}
-                                <span class="date"> Date - From {{ income.date }} to {{ income.end_date }}</span>
+                                <span class="date"> Date - From {{ income.date|date:"Y-m-d" }} to {{ income.end_date|date:"Y-m-d" }}</span>
+                                <span class="total-amount"> Total Amount: Rs. {{ income.total_amount|floatformat:2 }}</span>
                                 {% else %}
                                 <span class="date"> Date - {{ income.date }}</span>
                                 {% endif %}

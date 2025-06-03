@@ -169,6 +169,7 @@ class ExpenseListView(FormView):
                             'date': current_date,
                             'end_date': expense.end_date,
                             'long_term': expense.long_term,
+                            'total_amount': expense.amount
                         })
                         
                         # For expense_data_graph (chart)
@@ -260,7 +261,7 @@ class IncomeListView(FormView):
         income_data_graph = {}
         income_data = {}
 
-        # Process expenses for both dictionaries simultaneously to ensure consistency
+        # Process incomes for both dictionaries simultaneously to ensure consistency
         for account in accounts:
             incomes = account.income_list.all()
             for income in incomes:
@@ -269,19 +270,20 @@ class IncomeListView(FormView):
                     while current_date <= income.end_date:
                         year_month = current_date.strftime('%Y-%m')
                         
-                        # For expense_data (display)
+                        # For income_data (display)
                         if year_month not in income_data:
                             income_data[year_month] = []
-                            income_data[year_month].append({
-                                'id': income.id,
-                                'name': income.name,
-                                'amount': income.monthly_incomes,
-                                'date': current_date,
-                                'end_date': income.end_date,
-                                'long_term': income.long_term,
-                            })
+                        income_data[year_month].append({
+                            'id': income.id,
+                            'name': income.name,
+                            'amount': income.monthly_incomes,
+                            'date': current_date,
+                            'end_date': income.end_date,
+                            'long_term': income.long_term,
+                            'total_amount': income.amount
+                        })
                         
-                        # For expense_data_graph (chart)
+                        # For income_data_graph (chart)
                         if year_month not in income_data_graph:
                             income_data_graph[year_month] = 0
                         income_data_graph[year_month] += float(income.monthly_incomes)
