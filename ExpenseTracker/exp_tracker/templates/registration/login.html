@@ -10,7 +10,7 @@
         }
 
         .img img {
-            max-width: 150px;
+            max-width: 200px;
             height: auto;
         }
     </style>
@@ -24,7 +24,7 @@
     {% endif %}
 
     <div class="img">
-        <img src="{% static 'images/logo.png' %}">
+        <img src="{% static 'images/my_logo.png' %}">
     </div>
     <form method="POST" action="{% url 'login' %}">
         {% csrf_token %}
