@@ -28,6 +28,18 @@
             <div class="form-container">
                 <div class="form">
                     <h2 style = "text-align: center;">Register</h2>
+                        {% if form.errors %}
+                            <div class="form-errors" style="color: red; text-align: center;">
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <div>{{ field.label }}: {{ error }}</div>
+                                    {% endfor %}
+                                {% endfor %}
+                                {% for error in form.non_field_errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     {{ form.username.label_tag }} <br> {{ form.username }} <br>
                     {{ form.password1.label_tag }} <br> {{ form.password1 }} <br>
                     {{ form.password2.label_tag }} <br> {{ form.password2 }} 

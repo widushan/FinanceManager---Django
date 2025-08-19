@@ -8,7 +8,7 @@ urlpatterns = [
     path("report/", views.report, name="report"),
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/register/", views.register, name="register"),
-    path("accounts/login/", views.register, name="login"),
+    # Login handled by django.contrib.auth.urls
     
     path("expenses", views.ExpenseListView.as_view(), name='expenses'),
     path("incomes", views.IncomeListView.as_view(), name='incomes'),
