@@ -1,11 +1,10 @@
 #!/bin/bash
+set -e
 
-# install dependencies
-pip install setuptools
+# Install dependencies
+pip install --upgrade pip setuptools
 pip install -r requirements.txt
 
-# Run django commands
-python manage.py makemigrations
-python manage.py migrate
-python manage.py collectstatic
-
+# Run Django commands (from correct path)
+python ExpenseTracker/manage.py migrate --noinput
+python ExpenseTracker/manage.py collectstatic --noinput
