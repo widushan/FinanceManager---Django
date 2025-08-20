@@ -1,5 +1,7 @@
 django
+numpy
 python-dateutil
+plotly
 gunicorn
 dj-database-url
 whitenoise
