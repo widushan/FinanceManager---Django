@@ -31,6 +31,14 @@ TestEleven
 11@TestEleven
 
 
-
+python -m venv --upgrade-deps .venv
 
 .env\Scripts\activate
+
+pip install -r "requirements.txt"
+
+in settings.py
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+python manage.py collectstatic

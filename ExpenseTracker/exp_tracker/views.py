@@ -1,21 +1,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+#from django.http import HttpResponse
+#from django.contrib.auth.models import User
+from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
-from exp_tracker import models
+#from exp_tracker import models
 from .models import Account, Expense, Income
 from django.views.generic.edit import FormView
-from django.views.generic import ListView
+#from django.views.generic import ListView
 from datetime import datetime
 from .forms import ExpenseForm
 from .forms import IncomeForm
 from dateutil.relativedelta import relativedelta
 from django.utils.safestring import mark_safe
-from django.db.models import Sum, Count, F
-import plotly.express as px
-from plotly.graph_objs import *
-from collections import defaultdict
+#from django.db.models import Sum, Count, F
+#import plotly.express as px
+#from plotly.graph_objs import *
+#from collections import defaultdict
 
 
 

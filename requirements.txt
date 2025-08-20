@@ -2,7 +2,6 @@ django
 gunicorn
 dj-database-url
 whitenoise
-django-heroku
 flake8
 Pillow
 # packages
