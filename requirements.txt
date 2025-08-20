@@ -7,6 +7,7 @@ dj-database-url
 whitenoise
 flake8
 Pillow
+psycopg2
 # packages
 # Uncomment to use a Postgres database.
 #psycopg[binary]
