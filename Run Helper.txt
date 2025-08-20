@@ -29,3 +29,8 @@ TestTen
 
 TestEleven
 11@TestEleven
+
+
+
+
+.env\Scripts\activate
