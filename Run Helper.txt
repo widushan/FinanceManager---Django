@@ -8,6 +8,9 @@ username - pasindu
 email - pasindu1234@gmail.com
 password - widu@7788
 
+Supabase Acc-
+Finance Tracker
+1234@Finance
 
 Kavishka
 pasi@1234
