@@ -13,7 +13,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "blog/wsgi.py"
+      "dest": "ExpenseTracker/wsgi.py"
     },
     {
       "src": "/static/(.*)",
