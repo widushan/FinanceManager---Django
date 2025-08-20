@@ -1,0 +1,10 @@
+django
+gunicorn
+dj-database-url
+whitenoise
+django-heroku
+flake8
+Pillow
+# packages
+# Uncomment to use a Postgres database.
+#psycopg[binary]
