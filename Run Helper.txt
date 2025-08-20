@@ -8,6 +8,8 @@ username - pasindu
 email - pasindu1234@gmail.com
 password - widu@7788
 
+SECRET_KEY = "django-insecure-c_c&waivf278b!t8v3d_7^=ut_pkbcfa+0x#)ein*qpu4ofp_l"
+
 Supabase Acc-
 Finance Tracker
 1234@Finance

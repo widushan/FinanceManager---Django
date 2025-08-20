@@ -4,6 +4,8 @@ python-dateutil
 plotly
 gunicorn
 dj-database-url
+python-decouple
+python-dotenv
 whitenoise
 flake8
 Pillow
