@@ -2,18 +2,18 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.db.models import Sum, Count, Avg
+from django.db.models import Sum,Avg
 from django.utils import timezone
-from datetime import datetime, timedelta
+
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
-import json
+
 
 from .models import Account, Expense, Income
 from .serializers import (
     AccountSerializer, ExpenseSerializer, IncomeSerializer,
     ExpenseCreateSerializer, IncomeCreateSerializer,
-    FinancialStatsSerializer, MonthlyDataSerializer, AIInsightSerializer,
+    FinancialStatsSerializer, AIInsightSerializer,
     ExpenseSummarySerializer, IncomeSummarySerializer
 )
 
