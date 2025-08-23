@@ -14,6 +14,10 @@ psycopg2
 scikit-learn
 pandas
 joblib
+# API Development packages
+djangorestframework
+drf-yasg
+django-cors-headers
 # packages
 # Uncomment to use a Postgres database.
 #psycopg[binary]

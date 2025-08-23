@@ -39,11 +39,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "exp_tracker",
+    # API Development
+    "rest_framework",
+    "drf_yasg",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # CORS middleware
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -130,4 +135,59 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 LOGIN_REDIRECT_URL = "home"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# REST Framework Configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ],
+}
+
+# CORS Configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React frontend
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+# Swagger Settings
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Basic': {
+            'type': 'basic'
+        },
+        'Session': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': True,
+    'JSON_EDITOR': True,
+    'SUPPORTED_SUBMIT_METHODS': [
+        'get',
+        'post',
+        'put',
+        'delete',
+        'patch'
+    ],
+}
 
