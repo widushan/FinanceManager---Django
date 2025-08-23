@@ -9,7 +9,7 @@ import joblib
 import os
 from datetime import datetime, timedelta
 from django.conf import settings
-import json
+
 
 class FinanceMLPredictor:
     """
@@ -219,7 +219,7 @@ class FinanceMLPredictor:
             
             # Time-based patterns
             monthly_totals = df.groupby(df['date'].dt.to_period('M'))['amount'].sum()
-            day_of_week_totals = df.groupby(df['date'].dt.dayofweek)['amount'].sum()
+            #day_of_week_totals = df.groupby(df['date'].dt.dayofweek)['amount'].sum()
             
             # Spending trends
             if len(monthly_totals) > 1:
