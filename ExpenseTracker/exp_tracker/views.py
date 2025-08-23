@@ -17,6 +17,16 @@ from django.utils.safestring import mark_safe
 #from plotly.graph_objs import *
 #from collections import defaultdict
 
+# Import AI/ML functionality
+try:
+    from .ml_models import ml_predictor
+    ML_AVAILABLE = True
+except ImportError:
+    ML_AVAILABLE = False
+    print("Warning: ML packages not installed. AI features will be limited.")
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+
 
 
 
@@ -588,6 +598,370 @@ def generate_profit_loss_chart(data):
     )
     
     return fig.to_json()
+
+
+
+
+
+
+
+        
+
+
+                        
+                            
+
+
+
+
+# AI/ML Views
+@login_required
+def ai_insights(request):
+    """
+    Main AI insights page showing predictions and analysis
+    """
+    try:
+        # Get user's expense data
+        expenses = Expense.objects.filter(user=request.user).order_by('date')
+        
+        if not expenses.exists():
+            return render(request, 'exp_tracker/ai_insights.html', {
+                'error': 'No expense data available for AI analysis. Please add some expenses first.'
+            })
+        
+        # Convert to format expected by ML models
+        expenses_data = []
+        for expense in expenses:
+            # Create a simple category based on expense name or use a default
+            category = "General"
+            if expense.name.lower() in ['food', 'groceries', 'restaurant', 'dining']:
+                category = "Food"
+            elif expense.name.lower() in ['transport', 'gas', 'fuel', 'uber', 'taxi']:
+                category = "Transport"
+            elif expense.name.lower() in ['entertainment', 'movie', 'game', 'fun']:
+                category = "Entertainment"
+            elif expense.name.lower() in ['shopping', 'clothes', 'electronics']:
+                category = "Shopping"
+            elif expense.name.lower() in ['bills', 'electricity', 'water', 'internet']:
+                category = "Bills"
+            elif expense.name.lower() in ['health', 'medical', 'doctor', 'medicine']:
+                category = "Healthcare"
+            
+            expenses_data.append({
+                'date': expense.date,
+                'amount': float(expense.amount),
+                'category': category,
+                'description': expense.name or ''
+            })
+        
+        # Get AI insights
+        context = {
+            'total_expenses': len(expenses_data),
+            'date_range': {
+                'start': expenses.first().date.strftime('%Y-%m-%d'),
+                'end': expenses.last().date.strftime('%Y-%m-%d')
+            }
+        }
+        
+        # Spending pattern analysis
+        if ML_AVAILABLE:
+            pattern_analysis, pattern_message = ml_predictor.analyze_spending_patterns(expenses_data)
+            context['pattern_analysis'] = pattern_analysis
+            context['pattern_message'] = pattern_message
+        else:
+            # Simple analysis without ML
+            total_amount = sum(expense.amount for expense in expenses)
+            avg_amount = total_amount / len(expenses) if expenses else 0
+            
+            # Simple category analysis
+            categories = {}
+            for expense in expenses:
+                category = "General"
+                if expense.name.lower() in ['food', 'groceries', 'restaurant', 'dining']:
+                    category = "Food"
+                elif expense.name.lower() in ['transport', 'gas', 'fuel', 'uber', 'taxi']:
+                    category = "Transport"
+                elif expense.name.lower() in ['entertainment', 'movie', 'game', 'fun']:
+                    category = "Entertainment"
+                elif expense.name.lower() in ['shopping', 'clothes', 'electronics']:
+                    category = "Shopping"
+                elif expense.name.lower() in ['bills', 'electricity', 'water', 'internet']:
+                    category = "Bills"
+                elif expense.name.lower() in ['health', 'medical', 'doctor', 'medicine']:
+                    category = "Healthcare"
+                
+                categories[category] = categories.get(category, 0) + expense.amount
+            
+            top_category = max(categories.items(), key=lambda x: x[1]) if categories else ("None", 0)
+            
+            context['pattern_analysis'] = {
+                'total_spent': round(total_amount, 2),
+                'avg_daily_spending': round(avg_amount, 2),
+                'avg_transaction': round(avg_amount, 2),
+                'top_category': top_category[0],
+                'top_category_percentage': round((top_category[1] / total_amount * 100), 1) if total_amount > 0 else 0,
+                'spending_trend': "Stable",
+                'total_transactions': len(expenses),
+                'date_range': {
+                    'start': expenses.first().date.strftime('%Y-%m-%d'),
+                    'end': expenses.last().date.strftime('%Y-%m-%d')
+                },
+                'recommendations': ["Add more expense data for better AI insights"]
+            }
+            context['pattern_message'] = "Basic analysis completed (ML not available)"
+        
+        # Anomaly detection
+        if ML_AVAILABLE:
+            anomalies, anomaly_message = ml_predictor.detect_anomalies(expenses_data)
+            context['anomalies'] = anomalies
+            context['anomaly_message'] = anomaly_message
+        else:
+            # Simple anomaly detection without ML
+            amounts = [expense.amount for expense in expenses]
+            if amounts:
+                mean_amount = sum(amounts) / len(amounts)
+                std_amount = (sum((x - mean_amount) ** 2 for x in amounts) / len(amounts)) ** 0.5
+                
+                anomalies = []
+                for expense in expenses:
+                    if abs(expense.amount - mean_amount) > 2 * std_amount:  # 2 standard deviations
+                        category = "General"
+                        if expense.name.lower() in ['food', 'groceries', 'restaurant', 'dining']:
+                            category = "Food"
+                        elif expense.name.lower() in ['transport', 'gas', 'fuel', 'uber', 'taxi']:
+                            category = "Transport"
+                        elif expense.name.lower() in ['entertainment', 'movie', 'game', 'fun']:
+                            category = "Entertainment"
+                        elif expense.name.lower() in ['shopping', 'clothes', 'electronics']:
+                            category = "Shopping"
+                        elif expense.name.lower() in ['bills', 'electricity', 'water', 'internet']:
+                            category = "Bills"
+                        elif expense.name.lower() in ['health', 'medical', 'doctor', 'medicine']:
+                            category = "Healthcare"
+                        
+                        anomalies.append({
+                            'date': expense.date.strftime('%Y-%m-%d'),
+                            'amount': expense.amount,
+                            'category': category,
+                            'description': expense.name,
+                            'anomaly_score': -1.0
+                        })
+                
+                context['anomalies'] = anomalies
+                context['anomaly_message'] = f"Detected {len(anomalies)} potential anomalies using basic statistics"
+            else:
+                context['anomalies'] = []
+                context['anomaly_message'] = "No anomalies detected"
+        
+        # Expense prediction
+        if ML_AVAILABLE:
+            prediction, prediction_message = ml_predictor.predict_next_month_expenses(request.user.id)
+            context['prediction'] = prediction
+            context['prediction_message'] = prediction_message
+        else:
+            # Simple prediction without ML
+            if len(expenses) >= 3:
+                recent_expenses = expenses.order_by('-date')[:30]  # Last 30 expenses
+                avg_monthly = sum(expense.amount for expense in recent_expenses) / 3  # Assume 3 months
+                
+                context['prediction'] = {
+                    'total_predicted': round(avg_monthly, 2),
+                    'daily_average': round(avg_monthly / 30, 2),
+                    'month': 'Next Month',
+                    'confidence': 'Low'
+                }
+                context['prediction_message'] = "Basic prediction based on recent expenses"
+            else:
+                context['prediction'] = None
+                context['prediction_message'] = "Need more data for prediction"
+        
+        # Model training status
+        if len(expenses_data) >= 10:
+            if ML_AVAILABLE:
+                training_success, training_result = ml_predictor.train_expense_predictor(expenses_data)
+                context['model_trained'] = training_success
+                context['training_result'] = training_result
+            else:
+                context['model_trained'] = False
+                context['training_result'] = "ML models not available. Cannot train."
+        else:
+            context['model_trained'] = False
+            context['training_result'] = f"Need at least 10 expense records for training. Currently have {len(expenses_data)}."
+        
+        return render(request, 'exp_tracker/ai_insights.html', context)
+        
+    except Exception as e:
+        return render(request, 'exp_tracker/ai_insights.html', {
+            'error': f'Error generating AI insights: {str(e)}'
+        })
+
+@login_required
+def train_ml_model(request):
+    """
+    API endpoint to train the ML model
+    """
+    try:
+        expenses = Expense.objects.filter(user=request.user).order_by('date')
+        
+        if not expenses.exists():
+            return JsonResponse({
+                'success': False,
+                'message': 'No expense data available for training'
+            })
+        
+        expenses_data = []
+        for expense in expenses:
+            # Create a simple category based on expense name
+            category = "General"
+            if expense.name.lower() in ['food', 'groceries', 'restaurant', 'dining']:
+                category = "Food"
+            elif expense.name.lower() in ['transport', 'gas', 'fuel', 'uber', 'taxi']:
+                category = "Transport"
+            elif expense.name.lower() in ['entertainment', 'movie', 'game', 'fun']:
+                category = "Entertainment"
+            elif expense.name.lower() in ['shopping', 'clothes', 'electronics']:
+                category = "Shopping"
+            elif expense.name.lower() in ['bills', 'electricity', 'water', 'internet']:
+                category = "Bills"
+            elif expense.name.lower() in ['health', 'medical', 'doctor', 'medicine']:
+                category = "Healthcare"
+            
+            expenses_data.append({
+                'date': expense.date,
+                'amount': float(expense.amount),
+                'category': category,
+                'description': expense.name or ''
+            })
+        
+        if ML_AVAILABLE:
+            success, result = ml_predictor.train_expense_predictor(expenses_data)
+        else:
+            success = False
+            result = "ML models not available. Cannot train."
+        
+        return JsonResponse({
+            'success': success,
+            'result': result
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Training failed: {str(e)}'
+        })
+
+@login_required
+def get_expense_prediction(request):
+    """
+    API endpoint to get expense predictions
+    """
+    try:
+        if ML_AVAILABLE:
+            prediction, message = ml_predictor.predict_next_month_expenses(request.user.id)
+        else:
+            prediction = None
+            message = "ML models not available. Please install ML packages for predictions."
+        
+        return JsonResponse({
+            'success': prediction is not None,
+            'prediction': prediction,
+            'message': message
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Prediction failed: {str(e)}'
+        })
+
+@login_required
+def get_anomalies(request):
+    """
+    API endpoint to get spending anomalies
+    """
+    try:
+        expenses = Expense.objects.filter(user=request.user).order_by('date')
+        
+        if not expenses.exists():
+            return JsonResponse({
+                'success': False,
+                'message': 'No expense data available'
+            })
+        
+        expenses_data = []
+        for expense in expenses:
+            # Create a simple category based on expense name
+            category = "General"
+            if expense.name.lower() in ['food', 'groceries', 'restaurant', 'dining']:
+                category = "Food"
+            elif expense.name.lower() in ['transport', 'gas', 'fuel', 'uber', 'taxi']:
+                category = "Transport"
+            elif expense.name.lower() in ['entertainment', 'movie', 'game', 'fun']:
+                category = "Entertainment"
+            elif expense.name.lower() in ['shopping', 'clothes', 'electronics']:
+                category = "Shopping"
+            elif expense.name.lower() in ['bills', 'electricity', 'water', 'internet']:
+                category = "Bills"
+            elif expense.name.lower() in ['health', 'medical', 'doctor', 'medicine']:
+                category = "Healthcare"
+            
+            expenses_data.append({
+                'date': expense.date,
+                'amount': float(expense.amount),
+                'category': category,
+                'description': expense.name or ''
+            })
+        
+        if ML_AVAILABLE:
+            anomalies, message = ml_predictor.detect_anomalies(expenses_data)
+        else:
+            # Simple anomaly detection without ML
+            amounts = [expense.amount for expense in expenses]
+            if amounts:
+                mean_amount = sum(amounts) / len(amounts)
+                std_amount = (sum((x - mean_amount) ** 2 for x in amounts) / len(amounts)) ** 0.5
+                
+                anomalies = []
+                for expense in expenses:
+                    if abs(expense.amount - mean_amount) > 2 * std_amount:  # 2 standard deviations
+                        category = "General"
+                        if expense.name.lower() in ['food', 'groceries', 'restaurant', 'dining']:
+                            category = "Food"
+                        elif expense.name.lower() in ['transport', 'gas', 'fuel', 'uber', 'taxi']:
+                            category = "Transport"
+                        elif expense.name.lower() in ['entertainment', 'movie', 'game', 'fun']:
+                            category = "Entertainment"
+                        elif expense.name.lower() in ['shopping', 'clothes', 'electronics']:
+                            category = "Shopping"
+                        elif expense.name.lower() in ['bills', 'electricity', 'water', 'internet']:
+                            category = "Bills"
+                        elif expense.name.lower() in ['health', 'medical', 'doctor', 'medicine']:
+                            category = "Healthcare"
+                        
+                        anomalies.append({
+                            'date': expense.date.strftime('%Y-%m-%d'),
+                            'amount': expense.amount,
+                            'category': category,
+                            'description': expense.name,
+                            'anomaly_score': -1.0
+                        })
+                
+                message = f"Detected {len(anomalies)} potential anomalies using basic statistics"
+            else:
+                anomalies = []
+                message = "No anomalies detected"
+        
+        return JsonResponse({
+            'success': True,
+            'anomalies': anomalies,
+            'message': message
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'message': f'Anomaly detection failed: {str(e)}'
+        })
 
 
 

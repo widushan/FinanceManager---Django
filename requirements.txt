@@ -10,6 +10,10 @@ whitenoise
 flake8
 Pillow
 psycopg2
+# AI/ML packages
+scikit-learn
+pandas
+joblib
 # packages
 # Uncomment to use a Postgres database.
 #psycopg[binary]
