@@ -32,8 +32,11 @@
                 <div class="form-container">
                     <div class="form">
                         <h2 style = "text-align: center;">Login</h2>
-                        {{ form.username.label_tag }}  {{ form.username }} <br> <br>
-                        {{ form.password.label_tag }}  {{ form.password }} 
+                        {{ form.username.label_tag }}  
+                        <input type="text" name="username" id="id_username" class="form-control" value="" autocomplete="off" required>
+                        <br> <br>
+                        {{ form.password.label_tag }}  
+                        <input type="password" name="password" id="id_password" class="form-control" value="" autocomplete="new-password" required> 
                         
                     </div>
                     <br>
