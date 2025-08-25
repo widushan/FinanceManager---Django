@@ -39,6 +39,10 @@ UserTest
 1234@Test
 
 
+NewMyAcc
+1010@Pasindu
+
+
 python -m venv --upgrade-deps .venv
 
 .venv\Scripts\activate
