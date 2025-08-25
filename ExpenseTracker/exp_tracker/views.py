@@ -2,10 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 #from django.http import HttpResponse
 #from django.contrib.auth.models import User
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 #from exp_tracker import models
 from .models import Account, Expense, Income
 from django.views.generic.edit import FormView
+from django.contrib.auth.mixins import LoginRequiredMixin
 #from django.views.generic import ListView
 from datetime import datetime
 from .forms import ExpenseForm
@@ -130,7 +132,7 @@ def income_generate_graph(data):
 
 
 
-class ExpenseListView(FormView):
+class ExpenseListView(LoginRequiredMixin, FormView):
     template_name = 'exp_tracker/expenses_list.html'
     form_class = ExpenseForm
     success_url = '/expenses'
@@ -241,7 +243,7 @@ class ExpenseListView(FormView):
 
 
 
-class IncomeListView(FormView):
+class IncomeListView(LoginRequiredMixin, FormView):
     template_name = 'exp_tracker/incomes_list.html'
     form_class = IncomeForm
     success_url = '/incomes'
@@ -414,6 +416,7 @@ def delete_income(request, income_id):
 
 
 
+@login_required
 def report(request):
     user = request.user
     accounts = Account.objects.filter(user=user)
@@ -755,7 +758,11 @@ def ai_insights(request):
         
         # Expense prediction
         if ML_AVAILABLE:
-            prediction, prediction_message = ml_predictor.predict_next_month_expenses(request.user.id)
+            prediction_result = ml_predictor.predict_next_month_expenses(request.user.id)
+            if isinstance(prediction_result, tuple):
+                prediction, prediction_message = prediction_result
+            else:
+                prediction, prediction_message = prediction_result, ""
             context['prediction'] = prediction
             context['prediction_message'] = prediction_message
         else:
@@ -857,7 +864,11 @@ def get_expense_prediction(request):
     """
     try:
         if ML_AVAILABLE:
-            prediction, message = ml_predictor.predict_next_month_expenses(request.user.id)
+            prediction_result = ml_predictor.predict_next_month_expenses(request.user.id)
+            if isinstance(prediction_result, tuple):
+                prediction, message = prediction_result
+            else:
+                prediction, message = prediction_result, ""
         else:
             prediction = None
             message = "ML models not available. Please install ML packages for predictions."

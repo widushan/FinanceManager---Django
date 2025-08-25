@@ -21,3 +21,4 @@ django-cors-headers
 # packages
 # Uncomment to use a Postgres database.
 #psycopg[binary]
+coverage

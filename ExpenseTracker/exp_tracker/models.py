@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.utils import timezone
 # Create your models here.
 
 class Account(models.Model):
@@ -14,7 +15,7 @@ class Account(models.Model):
 class Expense(models.Model):
     name = models.CharField(max_length=100)
     amount = models.FloatField(default=0)
-    date = models.DateField(null=False, default=datetime.now().date())
+    date = models.DateField(null=False, default=timezone.now)
     long_term = models.BooleanField(default=False)
     interest_rate = models.FloatField(default=0, null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
@@ -44,7 +45,7 @@ class Expense(models.Model):
 class Income(models.Model):
     name = models.CharField(max_length=100)
     amount = models.FloatField(default=0)
-    date = models.DateField(null=False, default=datetime.now().date())
+    date = models.DateField(null=False, default=timezone.now)
     long_term = models.BooleanField(default=False)
     interest_rate = models.FloatField(default=0, null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)

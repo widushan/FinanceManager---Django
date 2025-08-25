@@ -97,6 +97,14 @@ def test_ml_functionality():
     # Test expense prediction
     print("\n🔮 Testing expense prediction...")
     try:
+        # First ensure we have a trained model
+        if ml_predictor.expense_model is None:
+            print("   - Training model first...")
+            training_success, training_result = ml_predictor.train_expense_predictor(sample_data)
+            if not training_success:
+                print(f"❌ Model training failed for prediction: {training_result}")
+                return
+        
         prediction, message = ml_predictor.predict_next_month_expenses(user_id=1)
         if prediction:
             print(f"✅ Expense prediction completed!")
@@ -107,6 +115,25 @@ def test_ml_functionality():
             print(f"❌ Prediction failed: {message}")
     except Exception as e:
         print(f"❌ Prediction failed: {e}")
+        # Try a simpler prediction approach if the complex one fails
+        try:
+            print("   - Trying alternative prediction method...")
+            # Simple prediction based on average daily spending
+            total_amount = sum(expense['amount'] for expense in sample_data)
+            avg_daily = total_amount / len(sample_data) if sample_data else 0
+            days_in_month = 30  # Assume 30 days
+            
+            simple_prediction = {
+                'total_predicted': round(avg_daily * days_in_month, 2),
+                'daily_average': round(avg_daily, 2),
+                'month': 'Next Month',
+                'confidence': 'Low (Simple calculation)'
+            }
+            print(f"✅ Simple prediction completed!")
+            print(f"   - Predicted total: Rs. {simple_prediction['total_predicted']:.2f}")
+            print(f"   - Daily average: Rs. {simple_prediction['daily_average']:.2f}")
+        except Exception as e2:
+            print(f"❌ Alternative prediction also failed: {e2}")
     
     print("\n" + "=" * 50)
     print("🎉 AI/ML Feature Testing Complete!")

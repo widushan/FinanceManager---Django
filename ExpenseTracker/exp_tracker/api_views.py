@@ -454,7 +454,11 @@ class AIInsightsAPIView(APIView):
 
         # Expense prediction
         if ML_AVAILABLE:
-            prediction, prediction_message = ml_predictor.predict_next_month_expenses(request.user.id)
+            prediction_result = ml_predictor.predict_next_month_expenses(request.user.id)
+            if isinstance(prediction_result, tuple):
+                prediction, _ = prediction_result
+            else:
+                prediction = prediction_result
             context['prediction'] = prediction
         else:
             # Simple prediction without ML

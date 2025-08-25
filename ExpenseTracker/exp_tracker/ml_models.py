@@ -98,6 +98,7 @@ class FinanceMLPredictor:
         """
         try:
             # Load model if not loaded
+            feature_columns = None
             if self.expense_model is None:
                 model_file = os.path.join(self.model_path, 'expense_predictor.pkl')
                 if os.path.exists(model_file):
@@ -106,27 +107,42 @@ class FinanceMLPredictor:
                     feature_columns = joblib.load(os.path.join(self.model_path, 'feature_columns.pkl'))
                 else:
                     return None, "Model not trained yet"
+            else:
+                # Load feature columns if model is already loaded
+                feature_columns_file = os.path.join(self.model_path, 'feature_columns.pkl')
+                if os.path.exists(feature_columns_file):
+                    feature_columns = joblib.load(feature_columns_file)
+                else:
+                    return None, "Feature columns not found"
             
             # Create prediction data for next month
             next_month = datetime.now().replace(day=1) + timedelta(days=32)
             next_month = next_month.replace(day=1)
             
+            # Get the actual number of days in the next month
+            import calendar
+            _, days_in_month = calendar.monthrange(next_month.year, next_month.month)
+            
             # Generate features for next month
             prediction_data = []
-            for day in range(1, 32):  # All days of next month
-                date = next_month.replace(day=day)
-                if date.month == next_month.month:  # Ensure we stay in the same month
+            for day in range(1, days_in_month + 1):  # Use actual days in month
+                try:
+                    date = next_month.replace(day=day)
                     row = {
                         'month': date.month,
                         'day_of_week': date.weekday(),
                         'day_of_month': date.day,
-                        'quarter': date.quarter
+                        # Python datetime has no quarter attribute; compute manually
+                        'quarter': ((date.month - 1) // 3) + 1
                     }
                     # Add category features (assuming most common categories)
                     for col in feature_columns:
                         if col.startswith('category_'):
                             row[col] = 0  # Default to 0, can be enhanced with user preferences
                     prediction_data.append(row)
+                except ValueError as e:
+                    # Skip invalid dates (shouldn't happen with proper day calculation)
+                    continue
             
             X_pred = pd.DataFrame(prediction_data)
             X_pred_scaled = self.scaler.transform(X_pred[feature_columns])

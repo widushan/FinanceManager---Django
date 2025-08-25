@@ -1,0 +1,95 @@
+{
+  "timestamp": "2025-08-25T13:09:51.398545",
+  "project": "Finance Manager Django",
+  "test_summary": {
+    "django_tests": {
+      "total_time": 21.750080108642578,
+      "failures": 0,
+      "success": true
+    },
+    "ai_tests": {
+      "total_time": 0.2955505847930908,
+      "success": true,
+      "message": "AI/ML tests completed successfully"
+    },
+    "coverage": {
+      "success": true,
+      "coverage_percentage": 52.635782747603834,
+      "total_statements": 1252,
+      "covered_statements": 659
+    },
+    "performance": {
+      "page_load_times": {
+        "home": {
+          "time": 2.1975040435791016,
+          "status_code": 200,
+          "success": true
+        },
+        "expenses": {
+          "time": 15.055418014526367,
+          "status_code": 200,
+          "success": true
+        },
+        "incomes": {
+          "time": 20.498275756835938,
+          "status_code": 200,
+          "success": true
+        },
+        "report": {
+          "time": 31.739234924316406,
+          "status_code": 200,
+          "success": true
+        },
+        "ai_insights": {
+          "time": 5.887031555175781,
+          "status_code": 200,
+          "success": true
+        }
+      },
+      "api_response_times": {
+        "/api/v1/accounts/": {
+          "time": 10.611295700073242,
+          "status_code": 200,
+          "success": true,
+          "note": "401 expected for unauthenticated requests"
+        },
+        "/api/v1/expenses/": {
+          "time": 8.39686393737793,
+          "status_code": 200,
+          "success": true,
+          "note": "401 expected for unauthenticated requests"
+        },
+        "/api/v1/incomes/": {
+          "time": 6.783485412597656,
+          "status_code": 200,
+          "success": true,
+          "note": "401 expected for unauthenticated requests"
+        },
+        "/api/v1/reports/financial/": {
+          "time": 4.019975662231445,
+          "status_code": 404,
+          "success": true,
+          "note": "401 expected for unauthenticated requests"
+        },
+        "/api/v1/ai/insights/": {
+          "time": 3.7984848022460938,
+          "status_code": 404,
+          "success": true,
+          "note": "401 expected for unauthenticated requests"
+        }
+      },
+      "database_query_times": {},
+      "memory_usage": {},
+      "success": true
+    },
+    "security": {
+      "csrf_protection": false,
+      "xss_protection": true,
+      "sql_injection_protection": true,
+      "authentication_required": true,
+      "authorization_working": true,
+      "success": true
+    }
+  },
+  "overall_status": "PASS"
+}

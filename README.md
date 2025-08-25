@@ -160,6 +160,24 @@ python manage.py test
 ```
 
 
+## 🧾 Test Reports
+
+Generate and submit test coverage, performance testing results, and security audit findings:
+
+```bash
+python run_tests.py
+```
+
+This command runs the full suite and produces report files in the project root:
+
+- `TEST_COVERAGE_REPORT.md` — Coverage summary
+- `PERFORMANCE_TEST_REPORT.md` — Page/API performance results
+- `SECURITY_AUDIT_REPORT.md` — Security checks overview
+- `test_report.json` — Comprehensive machine-readable summary
+
+You can find raw coverage data in `ExpenseTracker/coverage.json` as well.
+
+
 
 ## 📊 Project Structure
 
