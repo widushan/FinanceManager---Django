@@ -1,14 +1,14 @@
 {
-  "timestamp": "2025-08-25T18:37:11.400480",
+  "timestamp": "2025-08-26T00:27:05.951944",
   "project": "Finance Manager Django",
   "test_summary": {
     "django_tests": {
-      "total_time": 25.327155351638794,
+      "total_time": 19.526095390319824,
       "failures": 0,
       "success": true
     },
     "ai_tests": {
-      "total_time": 0.2535209655761719,
+      "total_time": 0.29508042335510254,
       "success": true,
       "message": "AI/ML tests completed successfully"
     },
@@ -21,58 +21,58 @@
     "performance": {
       "page_load_times": {
         "home": {
-          "time": 3.465414047241211,
+          "time": 4.53495979309082,
           "status_code": 200,
           "success": true
         },
         "expenses": {
-          "time": 14.945507049560547,
+          "time": 38.558244705200195,
           "status_code": 200,
           "success": true
         },
         "incomes": {
-          "time": 23.169755935668945,
+          "time": 42.76537895202637,
           "status_code": 200,
           "success": true
         },
         "report": {
-          "time": 40.67826271057129,
+          "time": 31.578540802001953,
           "status_code": 200,
           "success": true
         },
         "ai_insights": {
-          "time": 6.792306900024414,
+          "time": 6.891727447509766,
           "status_code": 200,
           "success": true
         }
       },
       "api_response_times": {
         "/api/v1/accounts/": {
-          "time": 5.1555633544921875,
+          "time": 8.519887924194336,
           "status_code": 200,
           "success": true,
           "note": "401 expected for unauthenticated requests"
         },
         "/api/v1/expenses/": {
-          "time": 3.5288333892822266,
+          "time": 6.011962890625,
           "status_code": 200,
           "success": true,
           "note": "401 expected for unauthenticated requests"
         },
         "/api/v1/incomes/": {
-          "time": 6.052732467651367,
+          "time": 7.513523101806641,
           "status_code": 200,
           "success": true,
           "note": "401 expected for unauthenticated requests"
         },
         "/api/v1/reports/financial/": {
-          "time": 6.530523300170898,
+          "time": 7.529258728027344,
           "status_code": 404,
           "success": true,
           "note": "401 expected for unauthenticated requests"
         },
         "/api/v1/ai/insights/": {
-          "time": 12.265443801879883,
+          "time": 4.008293151855469,
           "status_code": 404,
           "success": true,
           "note": "401 expected for unauthenticated requests"
