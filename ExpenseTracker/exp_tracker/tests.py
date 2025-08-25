@@ -2,9 +2,8 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import timedelta
 import json
-from decimal import Decimal
 
 from .models import Account, Expense, Income
 from .forms import ExpenseForm, IncomeForm

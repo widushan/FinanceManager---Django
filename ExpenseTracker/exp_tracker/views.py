@@ -27,7 +27,6 @@ except ImportError:
     ML_AVAILABLE = False
     print("Warning: ML packages not installed. AI features will be limited.")
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 
 
 

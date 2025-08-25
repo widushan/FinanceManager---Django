@@ -140,7 +140,7 @@ class FinanceMLPredictor:
                         if col.startswith('category_'):
                             row[col] = 0  # Default to 0, can be enhanced with user preferences
                     prediction_data.append(row)
-                except ValueError as e:
+                except ValueError:
                     # Skip invalid dates (shouldn't happen with proper day calculation)
                     continue
             
