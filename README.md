@@ -125,6 +125,15 @@ The application will be available at `http://127.0.0.1:8000/`
 6. **Reports**: `http://127.0.0.1:8000/report/`
 7. **AI Insights**: `http://127.0.0.1:8000/ai-insights/`
 
+![Image](https://github.com/user-attachments/assets/b7cafd37-61c2-4f02-903a-a5c1478eca90)
+![Image](https://github.com/user-attachments/assets/3644481e-5c4a-453e-a075-a0f92ce8fabc)
+![Image](https://github.com/user-attachments/assets/1e3e88de-da56-472f-bd51-e874ef7feb2c)
+![Image](https://github.com/user-attachments/assets/f2731b35-a109-4bb2-8ee8-ddc0650758ff)
+![Image](https://github.com/user-attachments/assets/cd81699d-e052-4c98-8dcd-b117b8154510)
+![Image](https://github.com/user-attachments/assets/677a0914-099e-4cf1-bd70-b90de5d08da2)
+![Image](https://github.com/user-attachments/assets/c116defc-ee0a-4bae-a707-0f75f1165bb8)
+![Image](https://github.com/user-attachments/assets/1440a04b-b98e-4509-8546-1f525ba5ae58)
+
 ### API Endpoints
 - **API Root**: `http://127.0.0.1:8000/api/v1/`
 - **Swagger Documentation**: `http://127.0.0.1:8000/swagger/`
@@ -294,4 +303,4 @@ For support and questions:
 
 
 created by: Pasindu Kavishka 22ug1-0729
-            Sewmini Fernando 22ug1-0271
+            
